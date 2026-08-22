@@ -4,7 +4,7 @@ from ultralytics import YOLO
 import numpy as np
 
 
-MODEL_PATH = "yolo11n.pt"
+MODEL_PATH = "yolo26s.pt"
 SOURCE = 0
 
 ZONE_POLYGON = np.array([
@@ -56,8 +56,8 @@ def main():
             frame,
             persist=True,
             tracker="bytetrack.yaml",
-            classes=[0],
-            conf=0.4,
+            classes=[0, 67],
+            conf=0.35,
             device="mps",
             verbose=False
         )

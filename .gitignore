@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .DS_Store
 outputs/*.mp4
+yolo11n.pt
+yolo26n.pt
