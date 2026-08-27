@@ -1,0 +1,5 @@
+timestamp,track_id,class,event,dwell_time
+2026-08-27T17:49:33,7,cell phone,ENTRY,
+2026-08-27T17:49:37,7,cell phone,EXIT,3.26
+2026-08-27T17:49:39,9,cell phone,ENTRY,
+2026-08-27T17:49:57,9,cell phone,EXIT,17.67

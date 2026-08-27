@@ -1,12 +1,24 @@
 import cv2
 import time
+import csv
+import json
+import os
 import numpy as np
+
+from datetime import datetime
 from ultralytics import YOLO
 
+OUTPUT_DIR = "outputs"
 
-# ============================================================
-# CONFIGURATION
-# ============================================================
+CSV_LOG_PATH = os.path.join(
+    OUTPUT_DIR,
+    "events.csv"
+)
+
+JSON_LOG_PATH = os.path.join(
+    OUTPUT_DIR,
+    "events.jsonl"
+)
 
 MODEL_PATH = "yolo11n.pt"
 SOURCE = 0
@@ -28,10 +40,76 @@ ZONE_POLYGON = np.array([
     [0, 350]
 ], dtype=np.int32)
 
+def log_event(
+    track_id,
+    class_name,
+    event_type,
+    dwell_time=None
+):
 
-# ============================================================
-# MAIN
-# ============================================================
+    os.makedirs(
+        OUTPUT_DIR,
+        exist_ok=True
+    )
+
+    timestamp = datetime.now().isoformat(
+        timespec="seconds"
+    )
+
+    event_data = {
+        "timestamp": timestamp,
+        "track_id": track_id,
+        "class": class_name,
+        "event": event_type,
+        "dwell_time": dwell_time
+    }
+
+    # -----------------------------
+    # CSV
+    # -----------------------------
+
+    csv_exists = os.path.exists(
+        CSV_LOG_PATH
+    )
+
+    with open(
+        CSV_LOG_PATH,
+        "a",
+        newline=""
+    ) as csv_file:
+
+        fieldnames = [
+            "timestamp",
+            "track_id",
+            "class",
+            "event",
+            "dwell_time"
+        ]
+
+        writer = csv.DictWriter(
+            csv_file,
+            fieldnames=fieldnames
+        )
+
+        if not csv_exists:
+            writer.writeheader()
+
+        writer.writerow(event_data)
+
+
+    # -----------------------------
+    # JSONL
+    # -----------------------------
+
+    with open(
+        JSON_LOG_PATH,
+        "a"
+    ) as json_file:
+
+        json_file.write(
+            json.dumps(event_data)
+            + "\n"
+        )
 
 def main():
 
@@ -139,6 +217,11 @@ def main():
                         f"ID {track_id} | "
                         f"{class_name} entered the zone"
                     )
+                    log_event(
+                        track_id=track_id,
+                        class_name=class_name,
+                        event_type="ENTRY"
+                    )
 
                 if is_inside:
 
@@ -171,7 +254,12 @@ def main():
                             f"{class_name} left the zone "
                             f"after {total_dwell:.2f} seconds"
                         )
-
+                        log_event(
+                            track_id=track_id,
+                            class_name=class_name,
+                            event_type="EXIT",
+                            dwell_time=round(total_dwell, 2)
+                        )
                         # Timer'ı sıfırla
                         track_states[track_id]["entry_time"] = None
 

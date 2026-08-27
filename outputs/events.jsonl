@@ -1,0 +1,4 @@
+{"timestamp": "2026-08-27T17:49:33", "track_id": 7, "class": "cell phone", "event": "ENTRY", "dwell_time": null}
+{"timestamp": "2026-08-27T17:49:37", "track_id": 7, "class": "cell phone", "event": "EXIT", "dwell_time": 3.26}
+{"timestamp": "2026-08-27T17:49:39", "track_id": 9, "class": "cell phone", "event": "ENTRY", "dwell_time": null}
+{"timestamp": "2026-08-27T17:49:57", "track_id": 9, "class": "cell phone", "event": "EXIT", "dwell_time": 17.67}
